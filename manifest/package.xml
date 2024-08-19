@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>*</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>Contact_Snapshot__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Contact_Snapshot__c.Contact__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Contact_Snapshot__c.Contact_Information__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Contact_Snapshot__c.Direct_Account_ID__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Contact_Snapshot__c.Snapshot_Date_Time__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Contact_Snapshot__c.Unique_Key__c</members>
+        <name>CustomField</name>
+    </types>
+    <version>56.0</version>
+</Package>

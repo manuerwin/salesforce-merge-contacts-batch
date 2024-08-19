@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Snapshot_Date_Time__c</fullName>
+    <description>When the snapshot was taken (vs when it was created as a record).</description>
+    <externalId>false</externalId>
+    <inlineHelpText>When the snapshot was taken (vs when it was created as a record).</inlineHelpText>
+    <label>Snapshot Date Time</label>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>DateTime</type>
+</CustomField>

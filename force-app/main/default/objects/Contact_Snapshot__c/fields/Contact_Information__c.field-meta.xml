@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Contact_Information__c</fullName>
+    <description>Store all Contact information in JSON format for later triage and reference.
+Ideally viewed by a JSON viewer component.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>All Contact information in JSON format.</inlineHelpText>
+    <label>Contact Information</label>
+    <length>32768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
+</CustomField>
