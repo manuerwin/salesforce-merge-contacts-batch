@@ -1,0 +1,12 @@
+First Name, Last Name, isMaster, Should Merge, AccountId, Dedupe Key
+Amanda, Survivor Manu Testing, TRUE, TRUE,alpha, amanda
+Ben, Survivor Manu Testing, TRUE, TRUE,beta,ben
+Charlie, Survivor Manu Testing, TRUE, TRUE,charlie, charlie
+Dani delta, Survivor Manu Testing, TRUE, TRUE,delta, dani
+Amanda2 alpha, Doe Manu Testing, FALSE, TRUE,alpha, amanda
+Amanda3 alpha, Doe Manu Testing, FALSE, TRUE,alpha, amanda
+Amanda4 alpha, Doe Manu Testing, FALSE, TRUE,alpha, amanda
+Amanda5 alpha against beta, Doe Manu Testing, FALSE, TRUE,beta, amanda
+Ben2 beta, Doe Manu Testing, FALSE, TRUE,beta,ben
+Charlie2 charlie against delta, Doe Manu Testing, FALSE, TRUE,delta, charlie
+Dani2 delta, Doe Manu Testing, FALSE, TRUE,delta, dani

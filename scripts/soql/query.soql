@@ -1,0 +1,52 @@
+// Use .soql files to store SOQL queries.
+// You can execute queries in VS Code by selecting the
+//     query text and running the command:
+//     SFDX: Execute SOQL Query with Currently Selected Text
+
+# get contacts (survivor and non-survivor) ready to be merged
+SELECT Id, FirstName, LastName, AccountId, Account.Name, Account.LN_ID__c, Should_Merge__c, isMaster__c, Dedupe_Key__c
+FROM Contact
+WHERE Should_Merge__c = true AND Dedupe_Key__c != NULL
+
+# surviving Contacts
+SELECT Id, FirstName, LastName, InActive__c, AccountId, Account.Name, Account.LN_ID__c, Should_Merge__c, isMaster__c, Dedupe_Key__c
+FROM Contact
+WHERE Should_Merge__c = true AND isMaster__c = true AND Dedupe_Key__c != NULL
+
+# Non-surviving Contacts
+SELECT Id, FirstName, LastName, InActive__c, AccountId, Account.Name, Account.LN_ID__c, Should_Merge__c, isMaster__c, Dedupe_Key__c
+FROM Contact
+WHERE Should_Merge__c = true AND isMaster__c = FALSE AND Dedupe_Key__c != NULL
+
+# to view ACRS for Contacts involved in merging
+SELECT Id, Contact.Name, Contact.Id, Account.Name, Account.Id, Contact.Dedupe_Key__c, Account.LN_ID__c, Contact.isMaster__c, Contact.Should_Merge__c, Contact.Inactive__c
+FROM AccountContactRelation
+WHERE Contact.Dedupe_Key__c != NULL
+
+SELECT Id, Contact.Name, Contact.Id, Account.Name, Account.Id, Contact.Dedupe_Key__c, Account.LN_ID__c, Contact.isMaster__c, Contact.Should_Merge__c, Contact.Inactive__c
+FROM AccountContactRelation
+WHERE Contact.Should_Merge__c = true AND Contact.isMaster__c = FALSE AND Contact.Dedupe_Key__c != NULL
+
+# contacts with multiple snapshots
+SELECT Contact__c, COUNT(Id)
+FROM Contact_Snapshot__c
+GROUP BY Contact__c HAVING COUNT(Id) > 1
+
+# What's running?
+SELECT MethodName, Status
+FROM AsyncApexJob WHERE JobType='BatchApex' AND Status IN ('Processing','Preparing','Queued')
+
+=====DEV and TESTING=======
+# updating Account LN ids
+SELECT Id, Name, LN_ID__c
+FROM Account
+WHERE Name LIKE '%Manu testing%'
+
+SELECT Id, FirstName, LastName, AccountId, Account.Name, Account.LN_ID__c, Should_Merge__c, isMaster__c, Dedupe_Key__c
+FROM Contact
+WHERE Account.Name LIKE '%Manu testing%'
+
+SELECT Id, Contact.Name, Contact.Id, Account.Name, Account.Id, Contact.Dedupe_Key__c, Account.LN_ID__c, Contact.isMaster__c, Contact.Should_Merge__c, Contact.Inactive__c
+FROM AccountContactRelation
+WHERE Account.Name LIKE '%Manu testing%'
+ORDER BY Contact.Id, Account.Id
