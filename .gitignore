@@ -13,6 +13,7 @@ deploy-options.json
 
 # LWC Jest coverage reports
 coverage/
+jest.config.js
 
 # Logs
 logs
@@ -24,8 +25,8 @@ yarn-error.log*
 # Dependency directories
 node_modules/
 
-# Eslint cache
-.eslintcache
+# Eslint
+.eslint*
 
 # MacOS system files
 .DS_Store
@@ -38,3 +39,19 @@ $RECYCLE.BIN/
 
 # Local environment variables
 .env
+
+.prettier*
+
+.husky*
+
+.vscode*
+
+config*
+
+.forceignore
+
+package*.json
+
+sfdx-project.json
+
+salesforce-merge-contacts-batch.code-workspace
