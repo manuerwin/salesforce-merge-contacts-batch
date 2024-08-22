@@ -26,9 +26,17 @@ Batch Apex does the heavy lifting for us, with initial snapshots of Contact reco
 
 # How do I merge duplicate contacts?
 
-## 0) Install the amazing Nebula Logger
+## 0) Install and enable
+
+### install the amazing Nebula Logger (unlocked version)
 
 https://github.com/jongpie/NebulaLogger
+
+### enable Contacts to Multiple Accounts
+
+https://help.salesforce.com/s/articleView?id=sf.shared_contacts_set_up.htm&type=5
+
+### deploy package.xml to your org
 
 ## 1) Backup your data!
 
