@@ -5,6 +5,18 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>Contact.Dedupe_Key__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Contact.Is_Survivor__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Contact.Should_Merge__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
         <members>Contact_Snapshot__c</members>
         <name>CustomObject</name>
     </types>
