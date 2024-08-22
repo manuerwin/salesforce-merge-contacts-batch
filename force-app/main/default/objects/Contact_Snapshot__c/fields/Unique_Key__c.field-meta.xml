@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Unique_Key__c</fullName>
     <caseSensitive>false</caseSensitive>
-    <description>Unique value for this record to allow upsert operations and prevent duplicates. Set by code as contactid|accountid.</contactid></description>
+    <description
+  >Unique value for this record to allow upsert operations and prevent duplicates. Set by code as contactid|accountid</description>
     <externalId>true</externalId>
     <label>Unique Key</label>
     <length>255</length>
