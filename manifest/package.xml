@@ -5,7 +5,15 @@
         <name>ApexClass</name>
     </types>
     <types>
+        <members>Contact_Snapshot__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>Contact.Dedupe_Key__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>AccountContactRelation.Account_Contact_Id__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -15,10 +23,6 @@
     <types>
         <members>Contact.Should_Merge__c</members>
         <name>CustomField</name>
-    </types>
-    <types>
-        <members>Contact_Snapshot__c</members>
-        <name>CustomObject</name>
     </types>
     <types>
         <members>Contact_Snapshot__c.Contact__c</members>
