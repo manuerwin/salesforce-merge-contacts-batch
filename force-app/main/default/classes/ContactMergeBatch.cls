@@ -25,7 +25,7 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
   /**
    * @description batch start
    * @param bc BatchableContext
-   * @return Database.QueryLocator for dedupe contacts where "Should Merge" and "Is Survivor" fields are both true and dedupe is populated, including a sub query for the related ACR’s
+   * @return Database.QueryLocator of contacts where "Should Merge" and "Is Survivor" fields are true and "Dedupe Key" is populated, including a sub query for the related ACR’s
    */
   public Database.QueryLocator start(Database.BatchableContext bc) {
     String query = contactAllFieldsQuery();
@@ -45,22 +45,27 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
     Logger.info('Starting ContactMergeBatch.execute');
     List<Contact_Snapshot__c> contactSnapshotList = new List<Contact_Snapshot__c>();
     Set<String> dedupeKeySet = new Set<String>();
-    Map<String, Contact> dedupeKeySurvivorMap = new Map<String, Contact>(); // assumes there is only one Survivor per dedupe Key
+    Logger.info('Assumption: there is only one Survivor per dedupe Key');
+    Map<String, Contact> dedupeKeySurvivorMap = new Map<String, Contact>();
+
     for (sObject obj : scope) {
-      // scope is a list of all Survivor contacts
       Contact originalContact = (Contact) obj;
       dedupeKeySet.add(originalContact.Dedupe_Key__c);
-      contactSnapshotList.add(generateSnapshotRecord(originalContact)); // snapshot of all Survivor
+      contactSnapshotList.add(generateSnapshotRecord(originalContact)); // snapshot of all Survivors
       if (!dedupeKeySurvivorMap.containsKey(originalContact.Dedupe_Key__c)) {
         dedupeKeySurvivorMap.put(
           originalContact.Dedupe_Key__c,
           originalContact
         );
       }
+      Logger.debug(
+        'Process Survivor contact with dedupe key: ' +
+        originalContact.Dedupe_Key__c,
+        scope
+      );
     }
 
-    // Get all the Non Survivor but should be merged contacts which are in the same dedupe Key
-    // Include a sub query for related ACR’s for the non-surviving Contacts
+    // Get all non-surviving contacts plus related ACR’s for the provided dedupe keys
     String query = contactAllFieldsQuery();
     String acrQuery = acrAllFieldsQuery();
     query += ', ' + acrQuery;
@@ -83,7 +88,7 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
     List<Contact> nonsurvivorContactsList = Database.query(query);
 
     if (!nonsurvivorContactsList.isEmpty()) {
-      Logger.info('## non-survivors exist for contacts marked to survive');
+      Logger.info('## non-survivors exist for survivor contacts');
       // generate snapshots and map of non-surviving contacts
       List<AccountContactRelation> acrsToRecreate = new List<AccountContactRelation>();
       Map<String, List<Contact>> keyNonSurvivorContactsMap = new Map<String, List<Contact>>();
@@ -228,7 +233,9 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
    * @param bc BatchableContext
    */
   public void finish(Database.BatchableContext bc) {
-    // Logger.setParentLogTransactionId(this.originalTransactionId);
+    Logger.setParentLogTransactionId(this.originalTransactionId);
+    Logger.info('Finishing running ContactMergeBatch');
+    Logger.saveLog();
   }
 
   /**
@@ -263,7 +270,7 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
   /**
    * @description Method to generate a contact snapshot record, given a contact;
    * @param contactToSerialise = Contact record
-   * @return snapshot = Contact snapshot record
+   * @return snapshot = Contact_Snapshot record
    */
   private Contact_Snapshot__c generateSnapshotRecord(
     Contact contactToSerialise
