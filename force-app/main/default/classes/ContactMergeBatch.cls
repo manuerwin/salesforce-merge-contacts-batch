@@ -1,11 +1,12 @@
 /**
- * Created by Manu Erwin April 2023
- * @description Batch Apex:
- * - Create JSON snapshot of Contact and related ACR info as custom “Contact Snapshot”,
- * - Merge non-surviving records,
- * - Re-create ACR’s as needed.
+ *  Created by Manu Erwin April 2023
+ *  @description Batch Apex:
+ *  - Create JSON snapshot of Contact and related ACR info as custom “Contact Snapshot”,
+ *  - Merge non-surviving records,
+ *  - Re-create ACR’s as needed.
  *
- * Dependencies: NebulaLogger https://github.com/jongpie/NebulaLogger
+ *  Note: process errors are logged to NebulaLogger
+ *  Dependencies: NebulaLogger https://github.com/jongpie/NebulaLogger
  *
  */
 public class ContactMergeBatch implements Database.Batchable<sObject> {
@@ -188,10 +189,7 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
         if (!res.isSuccess()) {
           for (Database.Error err : res.getErrors()) {
             Logger.error(
-              '##DEBUG: contact merge error: ' +
-                res.getId() +
-                ' : ' +
-                err.getMessage()
+              'Contact merge error: ' + res.getId() + ' : ' + err.getMessage()
             );
           }
         } else {
@@ -213,10 +211,7 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
           if (!res.isSuccess()) {
             for (Database.Error err : res.getErrors()) {
               Logger.error(
-                '##DEBUG: ACR insert error: ' +
-                  res.getId() +
-                  ' : ' +
-                  err.getMessage()
+                'ACR insert error: ' + res.getId() + ' : ' + err.getMessage()
               );
             }
           } else {
