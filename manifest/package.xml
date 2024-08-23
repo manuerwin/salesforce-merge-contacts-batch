@@ -1,48 +1,25 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
-        <members>*</members>
+        <members>ContactMergeBatch</members>
+        <members>ContactMergeBatchTest</members>
         <name>ApexClass</name>
+    </types>
+    <types>
+        <members>AccountContactRelation.Account_Contact_Id__c</members>
+        <members>Contact.Dedupe_Key__c</members>
+        <members>Contact.Is_Survivor__c</members>
+        <members>Contact.Should_Merge__c</members>
+        <members>Contact_Snapshot__c.Contact_Information__c</members>
+        <members>Contact_Snapshot__c.Contact__c</members>
+        <members>Contact_Snapshot__c.Direct_Account_ID__c</members>
+        <members>Contact_Snapshot__c.Snapshot_Date_Time__c</members>
+        <members>Contact_Snapshot__c.Unique_Key__c</members>
+        <name>CustomField</name>
     </types>
     <types>
         <members>Contact_Snapshot__c</members>
         <name>CustomObject</name>
     </types>
-    <types>
-        <members>Contact.Dedupe_Key__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>AccountContactRelation.Account_Contact_Id__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>Contact.Is_Survivor__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>Contact.Should_Merge__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>Contact_Snapshot__c.Contact__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>Contact_Snapshot__c.Contact_Information__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>Contact_Snapshot__c.Direct_Account_ID__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>Contact_Snapshot__c.Snapshot_Date_Time__c</members>
-        <name>CustomField</name>
-    </types>
-    <types>
-        <members>Contact_Snapshot__c.Unique_Key__c</members>
-        <name>CustomField</name>
-    </types>
-    <version>56.0</version>
+    <version>60.0</version>
 </Package>
