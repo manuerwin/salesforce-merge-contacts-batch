@@ -20,7 +20,6 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
   public ContactMergeBatch() {
     this.contactFields = Schema.SObjectType.Contact.fields.getMap();
     this.acrFields = Schema.SObjectType.AccountContactRelation.fields.getMap();
-    this.originalTransactionId = Logger.getTransactionId();
   }
 
   /**
@@ -29,6 +28,10 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
    * @return Database.QueryLocator of contacts where "Should Merge" and "Is Survivor" fields are true and "Dedupe Key" is populated, including a sub query for the related ACR’s
    */
   public Database.QueryLocator start(Database.BatchableContext bc) {
+    this.originalTransactionId = Logger.getTransactionId();
+    Logger.info('Starting ContactMergeBatch')
+      .addTag('ContactMergeBatch')
+      .addTag('batchApex');
     String query = contactAllFieldsQuery();
     String acrQuery = acrAllFieldsQuery();
     query += ', ' + acrQuery;
@@ -43,16 +46,20 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
    */
   public void execute(Database.BatchableContext bc, List<sObject> scope) {
     Logger.setParentLogTransactionId(this.originalTransactionId);
-    Logger.info('Starting ContactMergeBatch.execute');
+
     if (scope == null) {
-      Logger.error('## No records provided, exiting');
+      Logger.error('No records provided, exiting')
+        .addTag('ContactMergeBatch')
+        .addTag('batchApex');
       Logger.saveLog();
       return;
     }
 
     List<Contact_Snapshot__c> contactSnapshotList = new List<Contact_Snapshot__c>();
     Set<String> dedupeKeySet = new Set<String>();
-    Logger.info('## Assumption: there is only one Survivor per dedupe Key');
+    Logger.info('Assumption: there is only one Survivor per dedupe Key')
+      .addTag('ContactMergeBatch')
+      .addTag('batchApex');
     Map<String, Contact> dedupeKeySurvivorMap = new Map<String, Contact>();
 
     for (sObject obj : scope) {
@@ -66,10 +73,12 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
         );
       }
       Logger.debug(
-        'Process Survivor contact with dedupe key: ' +
-        originalContact.Dedupe_Key__c,
-        scope
-      );
+          'Process Survivor contact with dedupe key: ' +
+          originalContact.Dedupe_Key__c,
+          scope
+        )
+        .addTag('ContactMergeBatch')
+        .addTag('batchApex');
     }
 
     // Get all non-surviving contacts plus related ACR’s for the provided dedupe keys
@@ -87,12 +96,14 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
     List<Contact> nonsurvivorContactsList = Database.query(query);
 
     if (nonsurvivorContactsList.isEmpty()) {
-      Logger.error('## no survivor records found, exiting');
+      Logger.error('No survivor records found, exiting')
+        .addTag('ContactMergeBatch')
+        .addTag('batchApex');
       Logger.saveLog();
       return;
     }
 
-    Logger.info('## non-survivors exist for survivor contacts');
+    Logger.info('Non-survivors exist for survivor contacts');
     // generate snapshots and map of non-surviving contacts
     List<AccountContactRelation> acrsToRecreate = new List<AccountContactRelation>();
     Map<String, List<Contact>> keyNonSurvivorContactsMap = new Map<String, List<Contact>>();
@@ -119,13 +130,19 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
 
     // upsert snapshots
     if (contactSnapshotList.isEmpty()) {
-      Logger.error('Contact snapshots not created, exiting');
+      Logger.error('Contact snapshots not created, exiting')
+        .addTag('ContactMergeBatch')
+        .addTag('batchApex');
       Logger.saveLog();
       return;
     }
 
-    Logger.info('## about to upsert contact snapshots');
-    Logger.debug('## contact snapshots: ' + contactSnapshotList);
+    Logger.info('About to upsert contact snapshots')
+      .addTag('ContactMergeBatch')
+      .addTag('batchApex');
+    Logger.debug('Contact snapshots: ' + contactSnapshotList)
+      .addTag('ContactMergeBatch')
+      .addTag('batchApex');
     Schema.SObjectField contactSnapshotUniqueKey = Contact_Snapshot__c.Fields.Unique_Key__c;
     List<Database.UpsertResult> snapshotUpsertResults = Database.upsert(
       contactSnapshotList,
@@ -137,13 +154,15 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
       if (!res.isSuccess()) {
         for (Database.Error err : res.getErrors()) {
           Logger.error(
-            '## contact_snapshot upsert error: ' +
-              res.getId() +
-              err.getMessage()
-          );
+              'Contact_snapshot upsert error: ' + res.getId() + err.getMessage()
+            )
+            .addTag('ContactMergeBatch')
+            .addTag('batchApex');
         }
       } else {
-        Logger.info('## Created Contact Snapshot: ' + res);
+        Logger.info('Created Contact Snapshot: ' + res)
+          .addTag('ContactMergeBatch')
+          .addTag('batchApex');
       }
     }
 
@@ -160,9 +179,11 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
       List<Contact> duplicates = keyNonSurvivorContactsMap.get(dedupeKey);
       if (duplicates == null) {
         Logger.info(
-          '## Skipping to next as no duplicates found for Dedupe Key: ' +
-          dedupeKey
-        );
+            'Skipping to next as no duplicates found for Dedupe Key: ' +
+            dedupeKey
+          )
+          .addTag('ContactMergeBatch')
+          .addTag('batchApex');
         continue;
       }
       Integer numberOfDupes = duplicates.size();
@@ -179,9 +200,9 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
           Contact firstCon = generateSimpleContact(duplicates.remove(0));
           contactsToMerge.add(firstCon);
         }
-        Logger.debug(
-          '## about to merge duplicate contacts: ' + contactsToMerge
-        );
+        Logger.debug('About to merge duplicate contacts: ' + contactsToMerge)
+          .addTag('ContactMergeBatch')
+          .addTag('batchApex');
         Database.MergeResult[] contactMergeResult = Database.merge(
           survivorContact,
           contactsToMerge,
@@ -198,23 +219,33 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
       if (!res.isSuccess()) {
         for (Database.Error err : res.getErrors()) {
           Logger.error(
-            '## Contact merge error: ' + res.getId() + ' : ' + err.getMessage()
-          );
+              'Contact merge error: ' + res.getId() + ' : ' + err.getMessage()
+            )
+            .addTag('ContactMergeBatch')
+            .addTag('batchApex');
         }
       } else {
-        Logger.debug('## Merged Contacts: ' + res);
+        Logger.debug('Merged Contacts: ' + res)
+          .addTag('ContactMergeBatch')
+          .addTag('batchApex');
       }
     }
 
     // recreate ACR's for non-surviving Contacts
     if (acrsToRecreate.isEmpty()) {
-      Logger.info('## No ACRs need creating, exiting');
+      Logger.info('No ACRs need creating, exiting')
+        .addTag('ContactMergeBatch')
+        .addTag('batchApex');
       Logger.saveLog();
       return;
     }
 
-    Logger.info('## about to recreate ACRs');
-    Logger.debug('## ACRs: ' + acrsToRecreate);
+    Logger.info('About to recreate ACRs')
+      .addTag('ContactMergeBatch')
+      .addTag('batchApex');
+    Logger.debug('ACRs: ' + acrsToRecreate)
+      .addTag('ContactMergeBatch')
+      .addTag('batchApex');
     // Schema.SObjectField uniqueKey = AccountContactRelation.Fields.Account_Contact_Id__c;
     List<Database.SaveResult> acrSaveResults = Database.insert(
       acrsToRecreate,
@@ -225,11 +256,15 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
       if (!res.isSuccess()) {
         for (Database.Error err : res.getErrors()) {
           Logger.error(
-            '## ACR insert error: ' + res.getId() + ' : ' + err.getMessage()
-          );
+              'ACR insert error: ' + res.getId() + ' : ' + err.getMessage()
+            )
+            .addTag('ContactMergeBatch')
+            .addTag('batchApex');
         }
       } else {
-        Logger.info('## Recreated ACR: ' + res);
+        Logger.info('Recreated ACR: ' + res)
+          .addTag('ContactMergeBatch')
+          .addTag('batchApex');
       }
     }
 
@@ -242,7 +277,9 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
    */
   public void finish(Database.BatchableContext bc) {
     Logger.setParentLogTransactionId(this.originalTransactionId);
-    Logger.info('Finishing running ContactMergeBatch');
+    Logger.info('Finishing running ContactMergeBatch')
+      .addTag('ContactMergeBatch')
+      .addTag('batchApex');
     Logger.saveLog();
   }
 
