@@ -5,6 +5,7 @@
 // You can also execute the entire file by running the command:
 //     SFDX: Execute Anonymous Apex with Editor Contents
 
-# Running the code in smaller batches to avoid TOO MANY SOQL's
-ContactMergeBatch batch = new ContactMergeBatch();
-Database.executeBatch(batch, 10);
+// Select and run the TestSetup code via ExecAnon to create records
+
+// Running the code in smaller batches to avoid TOO MANY SOQL's
+Database.executeBatch(new ContactMergeBatch(), 10);
