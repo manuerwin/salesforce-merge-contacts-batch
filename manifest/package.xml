@@ -21,5 +21,9 @@
         <members>Contact_Snapshot__c</members>
         <name>CustomObject</name>
     </types>
+    <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
     <version>60.0</version>
 </Package>
