@@ -47,14 +47,6 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
   public void execute(Database.BatchableContext bc, List<sObject> scope) {
     Logger.setParentLogTransactionId(this.originalTransactionId);
 
-    if (scope == null) {
-      Logger.error('No records provided, exiting')
-        .addTag('ContactMergeBatch')
-        .addTag('batchApex');
-      Logger.saveLog();
-      return;
-    }
-
     List<Contact_Snapshot__c> contactSnapshotList = new List<Contact_Snapshot__c>();
     Set<String> dedupeKeySet = new Set<String>();
     Logger.info('Assumption: there is only one Survivor per dedupe Key')
@@ -96,7 +88,7 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
     List<Contact> nonsurvivorContactsList = Database.query(query);
 
     if (nonsurvivorContactsList.isEmpty()) {
-      Logger.error('No survivor records found, exiting')
+      Logger.error('There are no non-survivor records, exiting')
         .addTag('ContactMergeBatch')
         .addTag('batchApex');
       Logger.saveLog();
@@ -126,15 +118,6 @@ public class ContactMergeBatch implements Database.Batchable<sObject> {
           acrsToRecreate.add(acr);
         }
       }
-    }
-
-    // upsert snapshots
-    if (contactSnapshotList.isEmpty()) {
-      Logger.error('Contact snapshots not created, exiting')
-        .addTag('ContactMergeBatch')
-        .addTag('batchApex');
-      Logger.saveLog();
-      return;
     }
 
     Logger.info('About to upsert contact snapshots')
