@@ -7,5 +7,7 @@
 
 // Select and run the TestSetup code via ExecAnon to create records
 
+Database.executeBatch(new ContactMergeBatch());
+
 // Running the code in smaller batches to avoid TOO MANY SOQL's
 Database.executeBatch(new ContactMergeBatch(), 10);
