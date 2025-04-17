@@ -3,10 +3,11 @@ private class ContactMergeBatchTest {
   @TestSetup
   static void setup() {
     List<Account> accounts = new List<Account>();
-    Account alphaAccount = new Account(Name = 'Alpha Testing');
-    Account betaAccount = new Account(Name = 'Beta Testing');
-    Account charlieAccount = new Account(Name = 'Charlie Testing');
-    Account deltaAccount = new Account(Name = 'Delta Testing');
+    Datetime now = System.now();
+    Account alphaAccount = new Account(Name = 'Alpha Testing ' + now);
+    Account betaAccount = new Account(Name = 'Beta Testing ' + now);
+    Account charlieAccount = new Account(Name = 'Charlie Testing ' + now);
+    Account deltaAccount = new Account(Name = 'Delta Testing ' + now);
     accounts.add(alphaAccount);
     accounts.add(betaAccount);
     accounts.add(charlieAccount);
@@ -18,7 +19,7 @@ private class ContactMergeBatchTest {
     // survivor contacts with duplicates
     Contact amandaSurvivorContact = new Contact(
       FirstName = 'amanda alpha',
-      LastName = 'Survivor',
+      LastName = 'Survivor ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = true,
       Dedupe_Key__c = 'amanda',
@@ -27,7 +28,7 @@ private class ContactMergeBatchTest {
     survivorContacts.add(amandaSurvivorContact);
     Contact benSurvivorContact = new Contact(
       FirstName = 'ben beta',
-      LastName = 'Survivor',
+      LastName = 'Survivor ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = true,
       Dedupe_Key__c = 'ben',
@@ -36,7 +37,7 @@ private class ContactMergeBatchTest {
     survivorContacts.add(benSurvivorContact);
     Contact charlieSurvivorContact = new Contact(
       FirstName = 'charlie charlie',
-      LastName = 'Survivor',
+      LastName = 'Survivor ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = true,
       Dedupe_Key__c = 'charlie',
@@ -47,7 +48,7 @@ private class ContactMergeBatchTest {
     // survivor contact with no duplicates
     Contact daniSurvivorContact = new Contact(
       FirstName = 'dani delta',
-      LastName = 'Survivor',
+      LastName = 'Survivor ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = true,
       Dedupe_Key__c = 'dani',
@@ -62,7 +63,7 @@ private class ContactMergeBatchTest {
     List<Contact> nonSurvivorContacts = new List<Contact>();
     Contact amanda2Dupe = new Contact(
       FirstName = 'amanda2 alpha',
-      LastName = 'Doe',
+      LastName = 'Doe ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = false,
       Dedupe_Key__c = 'amanda',
@@ -71,7 +72,7 @@ private class ContactMergeBatchTest {
     nonSurvivorContacts.add(amanda2Dupe);
     Contact amanda3Dupe = new Contact(
       FirstName = 'amanda3 alpha',
-      LastName = 'Doe',
+      LastName = 'Doe ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = false,
       Dedupe_Key__c = 'amanda',
@@ -80,7 +81,7 @@ private class ContactMergeBatchTest {
     nonSurvivorContacts.add(amanda3Dupe);
     Contact amanda4Dupe = new Contact(
       FirstName = 'amanda4 alpha',
-      LastName = 'Doe',
+      LastName = 'Doe ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = false,
       Dedupe_Key__c = 'amanda',
@@ -89,7 +90,7 @@ private class ContactMergeBatchTest {
     nonSurvivorContacts.add(amanda4Dupe);
     Contact ben2Dupe = new Contact(
       FirstName = 'ben2 beta',
-      LastName = 'Doe',
+      LastName = 'Doe ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = false,
       Dedupe_Key__c = 'ben',
@@ -100,7 +101,7 @@ private class ContactMergeBatchTest {
     // non-surviving contacts with ACR's to different accounts
     Contact amanda5Dupe = new Contact(
       FirstName = 'amanda5 alpha against beta',
-      LastName = 'Doe',
+      LastName = 'Doe ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = false,
       Dedupe_Key__c = 'amanda',
@@ -109,7 +110,7 @@ private class ContactMergeBatchTest {
     nonSurvivorContacts.add(amanda5Dupe);
     Contact ben3Dupe = new Contact(
       FirstName = 'ben3 beta against delta',
-      LastName = 'Doe',
+      LastName = 'Doe ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = false,
       Dedupe_Key__c = 'ben',
@@ -118,7 +119,7 @@ private class ContactMergeBatchTest {
     nonSurvivorContacts.add(ben3Dupe);
     Contact charlie2Dupe = new Contact(
       FirstName = 'charlie2 charlie against delta',
-      LastName = 'Doe',
+      LastName = 'Doe ' + now,
       Should_Merge__c = true,
       Is_Survivor__c = false,
       Dedupe_Key__c = 'charlie',
