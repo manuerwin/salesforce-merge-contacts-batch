@@ -68,8 +68,11 @@ In Salesforce, give yourself the appropriate NebulaLogger Permission Set, open t
 Run in small batches via Execute Anonymous.
 
     // Run the code in smaller batches to avoid TOO MANY SOQL's
+    batchsize = 10;
+    Logger.info('Anon Apex running ContactMergeBatch with batch size: ' + batchsize);
     ContactMergeBatch batch = new ContactMergeBatch();
-    Database.executeBatch(batch, 10);
+    Database.executeBatch(batch, batchsize);
+    Logger.saveLog();
 
 ## 5) Review logs for errors
 
